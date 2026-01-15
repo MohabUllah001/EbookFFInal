@@ -15,6 +15,7 @@ import Login from "../Pages/Login/Login";
 import UserDashboard from "../Pages/Dashboard/UserDashboard";
 import AdminDashboard from "../Pages/Dashboard/AdminDashboard";
 import AuthorDashboard from "../Pages/Dashboard/AuthorDashboard";
+import MyBook from "../Pages/Dashboard/Book/MyBooks";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
       { path: "/blogs/:id", element: <SingleBlog /> },
       { path: "/cart", element: <Cart /> },
       { path: "/checkout", element: <Checkout /> },
-      { path: "/library", element: <Checkout /> },
+      { path: "/library", element: <MyBook /> },
       {
         path: "/dashboard/user",
         element: <UserDashboard />,
