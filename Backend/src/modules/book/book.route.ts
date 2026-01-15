@@ -4,11 +4,12 @@ import { roleGuard } from "../../middlewares/roleGuard";
 import {
   purchaseBook,
   readBook,
+  getMyBooks,
 } from "./book.controller";
 
 const router = Router();
 
-// 🔐 User purchases book (after payment)
+// 🔐 Purchase book (after payment)
 router.post(
   "/:bookId/purchase",
   auth,
@@ -21,6 +22,13 @@ router.get(
   "/:bookId/read",
   auth,
   readBook
+);
+
+// 🔐 My Library (purchased books)
+router.get(
+  "/my-books",
+  auth,
+  getMyBooks
 );
 
 export default router;

@@ -29,19 +29,23 @@ const readBook = async (
   const book = await Book.findById(bookId);
   if (!book) throw new ApiError(404, "Book not found");
 
-  // admin always allowed
   if (role === "admin") return book;
-
-  // author (owner) allowed
   if (book.authorId === userId) return book;
-
-  // buyer allowed
   if (book.buyers.includes(userId)) return book;
 
   throw new ApiError(403, "You are not allowed to read this book");
 };
 
+// 🔐 My Library (purchased books)
+const getMyBooks = async (userId: string) => {
+  return await Book.find({
+    buyers: userId,
+    status: "active",
+  });
+};
+
 export const BookService = {
   purchaseBook,
   readBook,
+  getMyBooks,
 };
