@@ -30,6 +30,7 @@ const router = createBrowserRouter([
       { path: "/blogs/:id", element: <SingleBlog /> },
       { path: "/cart", element: <Cart /> },
       { path: "/checkout", element: <Checkout /> },
+      { path: "/library", element: <Checkout /> },
       {
         path: "/dashboard/user",
         element: <UserDashboard />,
