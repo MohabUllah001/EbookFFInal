@@ -25,10 +25,7 @@ const Login = () => {
         : `${API_BASE_URL}/auth/register`;
 
       const payload = isLogin
-        ? {
-            email: form.email,
-            password: form.password,
-          }
+        ? { email: form.email, password: form.password }
         : form;
 
       const res = await fetch(url, {
@@ -44,17 +41,30 @@ const Login = () => {
         return;
       }
 
-      // 🔐 Save token & user (login response)
+      // 🔐 LOGIN SUCCESS
       if (isLogin) {
         localStorage.setItem("token", data.data.token);
         localStorage.setItem(
           "user",
           JSON.stringify(data.data.user)
         );
-      }
 
-      alert(isLogin ? "Login successful!" : "Registration successful!");
-      navigate("/");
+        const role = data.data.user.role;
+
+        // 🚀 ROLE-BASED REDIRECT
+        if (role === "admin") {
+          navigate("/dashboard/admin", { replace: true });
+        } else if (role === "author") {
+          navigate("/dashboard/author", { replace: true });
+        } else {
+          navigate("/dashboard/user", { replace: true });
+        }
+      } 
+      // 📝 SIGNUP SUCCESS
+      else {
+        alert("Registration successful! Please login.");
+        setIsLogin(true);
+      }
     } catch (error) {
       console.error(error);
       alert("Server error");

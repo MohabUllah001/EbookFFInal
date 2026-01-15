@@ -4,13 +4,27 @@ import AuthorDashboard from "./AuthorDashboard";
 import AdminDashboard from "./AdminDashboard";
 
 const DashboardLayout = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  let user = null;
+
+  try {
+    user = JSON.parse(localStorage.getItem("user"));
+  } catch {
+    localStorage.removeItem("user");
+  }
 
   // 🔐 login required
-  if (!user) return <Navigate to="/login" />;
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
-  if (user.role === "admin") return <AdminDashboard />;
-  if (user.role === "author") return <AuthorDashboard />;
+  // 🎯 role based dashboard
+  if (user.role === "admin") {
+    return <AdminDashboard />;
+  }
+
+  if (user.role === "author") {
+    return <AuthorDashboard />;
+  }
 
   return <UserDashboard />;
 };

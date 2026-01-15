@@ -12,6 +12,9 @@ import SingleBlog from "../Pages/Blog/Component/SingleBlog";
 import Cart from "../Pages/Cart/Cart";
 import Checkout from "../Pages/Checkout/Checkout";
 import Login from "../Pages/Login/Login";
+import UserDashboard from "../Pages/Dashboard/UserDashboard";
+import AdminDashboard from "../Pages/Dashboard/AdminDashboard";
+import AuthorDashboard from "../Pages/Dashboard/AuthorDashboard";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +30,19 @@ const router = createBrowserRouter([
       { path: "/blogs/:id", element: <SingleBlog /> },
       { path: "/cart", element: <Cart /> },
       { path: "/checkout", element: <Checkout /> },
+      {
+        path: "/dashboard/user",
+        element: <UserDashboard />,
+      },
+      {
+        path: "/dashboard/admin",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "/dashboard/author",
+        element: <AuthorDashboard />,
+      },
+
     ],
   },
   {
