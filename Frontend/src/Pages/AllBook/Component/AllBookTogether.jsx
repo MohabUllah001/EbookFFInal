@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import { useState, useMemo } from "react";
 import useBook from "../../../Data/useBook";
 import BookCard from "../../../Component/Shared/BookCard";
@@ -16,53 +17,61 @@ const CATEGORIES = [
 ];
 
 const AllBookTogether = () => {
+  const location = useLocation();
   const { books, loading } = useBook();
 
+  // ✅ initial category from Home
+  const [selectedCategory, setSelectedCategory] = useState(
+    location.state?.category || "All"
+  );
+
   const [sortType, setSortType] = useState("default");
-  const [category, setCategory] = useState("All");
 
+  // 🔁 category + sort
   const filteredAndSortedBooks = useMemo(() => {
-    let result = [...books];
+    let list = [...books];
 
-    // 🎯 CATEGORY FILTER
-    if (category !== "All") {
-      result = result.filter(
-        (book) => book.category === category
+    // 📂 CATEGORY FILTER
+    if (selectedCategory !== "All") {
+      list = list.filter(
+        (book) =>
+          book.category?.toLowerCase().trim() ===
+          selectedCategory.toLowerCase().trim()
       );
     }
 
-    // 🔽 SORTING
+    // 🔠 SORTING
     if (sortType === "az") {
-      result.sort((a, b) => a.title.localeCompare(b.title));
+      list.sort((a, b) => a.title.localeCompare(b.title));
     }
 
     if (sortType === "za") {
-      result.sort((a, b) => b.title.localeCompare(a.title));
+      list.sort((a, b) => b.title.localeCompare(a.title));
     }
 
     if (sortType === "priceLow") {
-      result.sort((a, b) => a.price - b.price);
+      list.sort((a, b) => Number(a.price) - Number(b.price));
     }
 
     if (sortType === "priceHigh") {
-      result.sort((a, b) => b.price - a.price);
+      list.sort((a, b) => Number(b.price) - Number(a.price));
     }
 
-    return result;
-  }, [books, sortType, category]);
+    return list;
+  }, [books, selectedCategory, sortType]);
 
   if (loading) return <p>Loading books...</p>;
 
   return (
     <div className="space-y-6">
 
-      {/* 🔧 FILTER BAR */}
+      {/* 🔽 FILTER BAR */}
       <div className="flex flex-col sm:flex-row justify-between gap-4">
 
-        {/* 📂 CATEGORY FILTER */}
+        {/* 📂 CATEGORY DROPDOWN */}
         <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
           className="border px-3 py-2 rounded w-full sm:w-60"
         >
           {CATEGORIES.map((cat) => (
@@ -72,15 +81,15 @@ const AllBookTogether = () => {
           ))}
         </select>
 
-        {/* 🔽 SORT FILTER */}
+        {/* 🔽 SORT DROPDOWN */}
         <select
           value={sortType}
           onChange={(e) => setSortType(e.target.value)}
           className="border px-3 py-2 rounded w-full sm:w-60"
         >
           <option value="default">Sort By</option>
-          <option value="az">Title: A - Z</option>
-          <option value="za">Title: Z - A</option>
+          <option value="az">Title: A → Z</option>
+          <option value="za">Title: Z → A</option>
           <option value="priceLow">Price: Low → High</option>
           <option value="priceHigh">Price: High → Low</option>
         </select>
@@ -88,14 +97,14 @@ const AllBookTogether = () => {
 
       {/* 📚 BOOK LIST */}
       {filteredAndSortedBooks.length === 0 ? (
-        <p className="text-gray-500 text-center py-10">
+        <p className="text-gray-500">
           No books found
         </p>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {filteredAndSortedBooks.map((book) => (
             <BookCard
-              key={book._id || book.id}
+              key={book._id}
               book={book}
             />
           ))}
