@@ -49,9 +49,24 @@ const updateUserRole = async (id: string, role: string) => {
   return user;
 };
 
+// 🔥 activate / deactivate user (admin)
+const toggleUserStatus = async (id: string) => {
+  const user = await User.findById(id);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  user.isActive = !user.isActive;
+  await user.save();
+
+  return user;
+};
+
+
 export const UserService = {
   createUser,
   getAllUsers,
   getUserById,
   updateUserRole,
+  toggleUserStatus
 };

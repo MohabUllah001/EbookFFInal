@@ -2,7 +2,6 @@ import ApiError from "../../utils/ApiError";
 import { User } from "../user/user.model";
 import { AuthorRequest } from "./authorRequest.model";
 
-
 // user applies as author
 const createAuthorRequest = async (userId: string) => {
   const exists = await AuthorRequest.findOne({ userId });
@@ -23,7 +22,6 @@ const approveAuthorRequest = async (requestId: string) => {
   request.status = "approved";
   await request.save();
 
-  // 🔥 VERY IMPORTANT: update user role
   await User.findByIdAndUpdate(request.userId, {
     role: "author",
   });
@@ -44,9 +42,29 @@ const rejectAuthorRequest = async (requestId: string) => {
   return request;
 };
 
-// admin get all requests
+// 🔥 ADMIN: get all pending author requests WITH USER INFO
 const getAllAuthorRequests = async () => {
-  return AuthorRequest.find();
+  const requests = await AuthorRequest.find({
+    status: "pending",
+  });
+
+  const result = await Promise.all(
+    requests.map(async (req) => {
+      const user = await User.findById(req.userId).select(
+        "name email"
+      );
+
+      return {
+        _id: req._id,
+        status: req.status,
+        userId: req.userId,
+        name: user?.name || "Unknown",
+        email: user?.email || "Unknown",
+      };
+    })
+  );
+
+  return result;
 };
 
 export const AuthorRequestService = {

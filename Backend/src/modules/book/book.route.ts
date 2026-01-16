@@ -1,34 +1,69 @@
 import { Router } from "express";
 import auth from "../../middlewares/auth";
 import { roleGuard } from "../../middlewares/roleGuard";
+import { upload } from "../../middlewares/upload";
 import {
-  purchaseBook,
-  readBook,
+  createBook,
+  getBooks,
+  getAllBooksAdmin,
+  toggleBookStatus,
+  deleteBook,
   getMyBooks,
 } from "./book.controller";
 
 const router = Router();
 
-// 🔐 Purchase book (after payment)
+// 🌍 Public
+router.get("/", getBooks);
+
+// 🔐 Admin
+router.get(
+  "/admin/all",
+  auth,
+  roleGuard("admin"),
+  getAllBooksAdmin
+);
+
+// ✍️ Author upload
 router.post(
-  "/:bookId/purchase",
+  "/",
   auth,
-  roleGuard("user", "author"),
-  purchaseBook
+  roleGuard("author"),
+  upload.fields([
+    { name: "cover", maxCount: 1 },
+    { name: "pdf", maxCount: 1 },
+  ]),
+  createBook
 );
 
-// 🔐 Read book (buyer / author / admin)
-router.get(
-  "/:bookId/read",
+// 🔐 Admin toggle
+router.patch(
+  "/:id/toggle-status",
   auth,
-  readBook
+  roleGuard("admin"),
+  toggleBookStatus
 );
 
-// 🔐 My Library (purchased books)
-router.get(
-  "/my-books",
+router.patch(
+  "/:id/toggle-status",
   auth,
+  roleGuard("admin"),
+  toggleBookStatus
+);
+
+router.delete(
+  "/:id",
+  auth,
+  deleteBook
+);
+
+// book.route.ts
+router.get(
+  "/author/my",
+  auth,
+  roleGuard("author"),
   getMyBooks
 );
+
 
 export default router;

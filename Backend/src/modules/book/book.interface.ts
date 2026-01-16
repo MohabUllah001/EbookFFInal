@@ -4,6 +4,7 @@ export interface IBook {
   category: string;
   price: number;
   cover: string;
+  pdfUrl: string;
   authorId: string;
   status: "pending" | "active";
   buyers: string[];

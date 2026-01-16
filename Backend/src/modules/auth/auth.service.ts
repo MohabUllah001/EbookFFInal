@@ -14,6 +14,7 @@ interface ILoginPayload {
   password: string;
 }
 
+// 🔐 REGISTER
 const register = async (payload: IRegisterPayload) => {
   const { name, email, password } = payload;
 
@@ -43,6 +44,7 @@ const register = async (payload: IRegisterPayload) => {
   };
 };
 
+// 🔐 LOGIN
 const login = async (payload: ILoginPayload) => {
   const { email, password } = payload;
 
@@ -50,6 +52,11 @@ const login = async (payload: ILoginPayload) => {
   const user = await User.findOne({ email });
   if (!user) {
     throw new Error("Invalid email or password");
+  }
+
+  // 🔒 ADD ONLY THIS CHECK (inactive user block)
+  if (user.isActive === false) {
+    throw new Error("Your account is deactivated. Contact admin.");
   }
 
   // 🔐 compare password

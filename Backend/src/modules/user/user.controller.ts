@@ -41,3 +41,17 @@ export const updateUserRole = asyncHandler(async (req: any, res: Response) => {
     data: user,
   });
 });
+
+// 🔐 Admin → activate / deactivate user
+export const toggleUserStatus = asyncHandler(
+  async (req: any, res: Response) => {
+    const user = await UserService.toggleUserStatus(
+      req.params.id
+    );
+
+    res.json({
+      success: true,
+      data: user,
+    });
+  }
+);

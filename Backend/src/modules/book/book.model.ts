@@ -8,6 +8,7 @@ const bookSchema = new Schema<IBook>(
     category: { type: String, required: true },
     price: { type: Number, required: true },
     cover: { type: String, required: true },
+    pdfUrl: { type: String, required: true },
     authorId: { type: String, required: true },
     status: {
       type: String,

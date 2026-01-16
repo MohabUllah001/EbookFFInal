@@ -4,7 +4,7 @@ import { BookService } from "../book/book.service";
 import type { Response } from "express";
 
 // 🔐 STEP 1: Init payment
-export const initPayment = asyncHandler(async (req: any, res:Response) => {
+export const initPayment = asyncHandler(async (req: any, res: Response) => {
   const userId = req.user.userId;
   const { amount, bookId } = req.body;
 
@@ -14,9 +14,12 @@ export const initPayment = asyncHandler(async (req: any, res:Response) => {
     total_amount: amount,
     currency: "BDT",
     tran_id: tranId,
-    success_url: `http://localhost:5000/api/payment/success?bookId=${bookId}&userId=${userId}`,
-    fail_url: "http://localhost:5000/api/payment/fail",
-    cancel_url: "http://localhost:5000/api/payment/cancel",
+
+    // ✅ FIXED PORT (3000)
+    success_url: `http://localhost:3000/api/payment/success?bookId=${bookId}&userId=${userId}`,
+    fail_url: "http://localhost:3000/api/payment/fail",
+    cancel_url: "http://localhost:3000/api/payment/cancel",
+
     cus_email: req.user.email,
   };
 
@@ -35,9 +38,10 @@ export const paymentSuccess = asyncHandler(async (req: any, res: Response) => {
     userId: string;
   };
 
-  // 🔥 VERY IMPORTANT: purchase only here
+  // 🔥 Purchase happens ONLY here
   await BookService.purchaseBook(bookId, userId);
 
+  // ✅ Frontend success page
   res.redirect("http://localhost:5173/payment-success");
 });
 

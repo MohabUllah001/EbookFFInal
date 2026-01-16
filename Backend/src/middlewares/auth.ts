@@ -1,9 +1,15 @@
-
 import jwt from "jsonwebtoken";
-import type { NextFunction, Response } from "express";
+import type { NextFunction, Response, Request } from "express";
 import ApiError from "../utils/ApiError";
 
-const auth = (req: any, res: Response, next: NextFunction) => {
+export interface AuthRequest extends Request {
+  user?: {
+    userId: string;
+    role: string;
+  };
+}
+
+const auth = (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -21,11 +27,9 @@ const auth = (req: any, res: Response, next: NextFunction) => {
       role: string;
     };
 
-    // 🔥 attach user info to request
     req.user = decoded;
-
     next();
-  } catch (error) {
+  } catch {
     throw new ApiError(401, "Invalid or expired token");
   }
 };

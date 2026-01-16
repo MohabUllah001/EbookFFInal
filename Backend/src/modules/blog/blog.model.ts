@@ -3,11 +3,26 @@ import type { IBlog } from "./blog.interface";
 
 const blogSchema = new Schema<IBlog>(
   {
-    title: String,
-    description: String,
-    image: String,
-    authorId: String,
-    status: { type: String, default: "pending" },
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+    },
+    authorId: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "active"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );

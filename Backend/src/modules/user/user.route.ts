@@ -3,6 +3,7 @@ import {
   getAllUsers,
   getUserById,
   updateUserRole,
+  toggleUserStatus
 } from "./user.controller";
 import auth from "../../middlewares/auth";
 import { roleGuard } from "../../middlewares/roleGuard";
@@ -31,5 +32,14 @@ router.patch(
   roleGuard("admin"),
   updateUserRole
 );
+
+// 🔐 Admin → activate / deactivate user
+router.patch(
+  "/:id/toggle-status",
+  auth,
+  roleGuard("admin"),
+  toggleUserStatus
+);
+
 
 export default router;

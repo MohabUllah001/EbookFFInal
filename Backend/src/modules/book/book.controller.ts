@@ -1,43 +1,108 @@
 import type { Response } from "express";
 import asyncHandler from "../../middlewares/asyncHandler";
+import ApiError from "../../utils/ApiError";
 import { BookService } from "./book.service";
 
-// 🔐 Purchase (after payment)
-export const purchaseBook = asyncHandler(async (req: any, res: Response) => {
-  const userId = req.user.userId;
-  const { bookId } = req.params;
+/**
+ * 🔐 Author → Create Book (with cover + pdf)
+ */
+export const createBook = asyncHandler(
+  async (req: any, res: Response) => {
+    const { title, abstract, category, price } = req.body;
 
-  const book = await BookService.purchaseBook(bookId, userId);
+    const coverFile = req.files?.cover?.[0];
+    const pdfFile = req.files?.pdf?.[0];
 
-  res.status(200).json({
-    success: true,
-    message: "Book purchased successfully",
-    data: book,
-  });
-});
+    if (!coverFile || !pdfFile) {
+      throw new ApiError(400, "Cover and PDF are required");
+    }
 
-// 🔐 Read book
-export const readBook = asyncHandler(async (req: any, res: Response) => {
-  const userId = req.user.userId;
-  const role = req.user.role;
-  const { bookId } = req.params;
+    const book = await BookService.createBook({
+      title,
+      abstract,
+      category,
+      price: Number(price),
+      cover: `/uploads/${coverFile.filename}`,
+      pdfUrl: `/uploads/${pdfFile.filename}`,
+      authorId: req.user.userId,
+      status: "pending",
+      buyers: [],
+    });
 
-  const book = await BookService.readBook(bookId, userId, role);
+    res.status(201).json({
+      success: true,
+      data: book,
+    });
+  }
+);
 
-  res.status(200).json({
-    success: true,
-    data: book,
-  });
-});
+/**
+ * 🌍 Public → Active books only
+ */
+export const getBooks = asyncHandler(
+  async (_req: any, res: Response) => {
+    const books = await BookService.getActiveBooks();
+    res.json({
+      success: true,
+      data: books,
+    });
+  }
+);
 
-// 🔐 My Library
-export const getMyBooks = asyncHandler(async (req: any, res: Response) => {
-  const userId = req.user.userId;
+/**
+ * 🔐 Admin → All books (active + pending)
+ */
+export const getAllBooksAdmin = asyncHandler(
+  async (_req: any, res: Response) => {
+    const books = await BookService.getAllBooks();
+    res.json({
+      success: true,
+      data: books,
+    });
+  }
+);
 
-  const books = await BookService.getMyBooks(userId);
+/**
+ * 🔁 Admin → Toggle book status (active <-> pending)
+ */
+export const toggleBookStatus = asyncHandler(
+  async (req: any, res: Response) => {
+    const book = await BookService.toggleBookStatus(
+      req.params.id
+    );
 
-  res.status(200).json({
-    success: true,
-    data: books,
-  });
-});
+    res.json({
+      success: true,
+      data: book,
+    });
+  }
+);
+
+/**
+ * ❌ Admin / Author → Delete book
+ */
+export const deleteBook = asyncHandler(
+  async (req: any, res: Response) => {
+    await BookService.deleteBook(req.params.id);
+
+    res.json({
+      success: true,
+      message: "Book deleted successfully",
+    });
+  }
+);
+
+// 🔐 AUTHOR → get own books
+export const getMyBooks = asyncHandler(
+  async (req: any, res: Response) => {
+    const authorId = req.user.userId; // 🔥 JWT থেকে
+
+    const books =
+      await BookService.getBooksByAuthor(authorId);
+
+    res.json({
+      success: true,
+      data: books,
+    });
+  }
+);

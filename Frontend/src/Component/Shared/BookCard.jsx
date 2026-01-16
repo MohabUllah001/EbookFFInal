@@ -15,8 +15,8 @@ const BookCard = ({ book }) => {
       {/* 📘 Book Image */}
       <NavLink to={`/all-books/${book.id}`}>
         <img
-          src={book.coverimage}
-          alt={book.name}
+          src={book.cover}
+          alt={book.title}
           className="h-52 w-full object-cover rounded mb-3"
         />
       </NavLink>
@@ -24,17 +24,17 @@ const BookCard = ({ book }) => {
       {/* 📕 Book Title */}
       <NavLink to={`/all-books/${book.id}`}>
         <h3 className="font-semibold text-gray-800 hover:text-[#3059b8]">
-          {book.name}
+          {book.title}
         </h3>
       </NavLink>
 
       {/* ℹ️ Extra Info */}
       <p className="text-sm text-gray-500 mt-1">
-        Language: {book.language}
+        Category: {book.category}
       </p>
 
       <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-        {book.shortDescription}
+        {book.abstract}
       </p>
 
       {/* 💰 Price + Cart Button */}

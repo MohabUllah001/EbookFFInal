@@ -1,10 +1,30 @@
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL, authHeader } from "../../config/api";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
 
-  const applyAuthor = () => {
-    alert("Author application submitted (Pending)");
+  // 🔥 REAL APPLY AS AUTHOR
+  const applyAuthor = async () => {
+    try {
+      const res = await fetch(
+        `${API_BASE_URL}/author-requests/apply`,
+        {
+          method: "POST",
+          headers: authHeader(),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert("Author application submitted! Waiting for admin approval.");
+      } else {
+        alert(data.message || "Already applied");
+      }
+    } catch (_) {
+      alert("Failed to apply as author");
+    }
   };
 
   return (
@@ -14,7 +34,6 @@ const UserDashboard = () => {
       </h1>
 
       <div className="grid md:grid-cols-2 gap-6">
-
         <div className="border p-6 rounded">
           <h2 className="font-semibold mb-2">📚 My Library</h2>
           <p>Your purchased books</p>
@@ -23,14 +42,6 @@ const UserDashboard = () => {
             className="mt-3 text-[#3059b8]"
           >
             View Books
-          </button>
-        </div>
-
-        <div className="border p-6 rounded">
-          <h2 className="font-semibold mb-2">📝 My Blogs</h2>
-          <p>Create and manage your blogs</p>
-          <button className="mt-3 text-[#3059b8]">
-            Go to Blogs
           </button>
         </div>
 
@@ -44,7 +55,6 @@ const UserDashboard = () => {
             Apply
           </button>
         </div>
-
       </div>
     </div>
   );

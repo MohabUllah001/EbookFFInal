@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
+import { AuthRequest } from "../../middlewares/auth";
 
 export const register = async (req: Request, res: Response) => {
   const user = await AuthService.register(req.body);
@@ -18,5 +19,13 @@ export const login = async (req: Request, res: Response) => {
     success: true,
     message: "Login successful",
     data: result,
+  });
+};
+
+// 🔐 JWT VERIFY API
+export const me = async (req: AuthRequest, res: Response) => {
+  res.status(200).json({
+    success: true,
+    user: req.user,
   });
 };

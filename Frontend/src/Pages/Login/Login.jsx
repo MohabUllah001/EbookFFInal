@@ -49,9 +49,11 @@ const Login = () => {
           JSON.stringify(data.data.user)
         );
 
+        // ✅ VERY IMPORTANT (Navbar update)
+        window.dispatchEvent(new Event("authChanged"));
+
         const role = data.data.user.role;
 
-        // 🚀 ROLE-BASED REDIRECT
         if (role === "admin") {
           navigate("/dashboard/admin", { replace: true });
         } else if (role === "author") {
@@ -75,7 +77,6 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white shadow-lg rounded-lg overflow-hidden grid md:grid-cols-2 w-full max-w-4xl">
 
-        {/* Left Image (Login) */}
         {isLogin && (
           <div className="hidden md:block">
             <img
@@ -86,7 +87,6 @@ const Login = () => {
           </div>
         )}
 
-        {/* Form */}
         <div className="p-10">
           <h2 className="text-2xl font-bold mb-4">
             {isLogin ? "Login" : "Sign Up"}
@@ -144,7 +144,6 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Right Image (Signup) */}
         {!isLogin && (
           <div className="hidden md:block">
             <img
