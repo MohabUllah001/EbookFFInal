@@ -38,7 +38,16 @@ const Navbar = () => {
   };
 
   return (
-    <header className="flex justify-between items-center py-4 shadow container mx-auto px-6">
+    <div className="flex flex-col">
+      <div className="">
+        <div className="bg-[#3059b8] text-white text-center py-2 text-sm font-medium">
+        🎉 Flat 30% OFF on All eBooks — Limited Time Only!
+      </div>
+      </div>
+       <div className="">
+        
+    <header className="flex justify-between items-center py-4 shadow container mx-auto px-12">
+     
       <NavLink to="/">
         <img src={logo} alt="Logo" className="h-8" />
       </NavLink>
@@ -69,6 +78,9 @@ const Navbar = () => {
         )}
       </div>
     </header>
+       </div>
+    </div>
+   
   );
 };
 
