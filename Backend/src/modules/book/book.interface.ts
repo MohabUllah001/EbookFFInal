@@ -7,10 +7,7 @@ export interface IBook {
   price: number;
   cover: string;
   pdfUrl: string;
-
-  // 🔥 author reference
   authorId: Types.ObjectId;
-
   status: "pending" | "active";
   buyers: string[];
 }

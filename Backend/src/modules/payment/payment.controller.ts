@@ -126,7 +126,7 @@ export const paymentSuccess = asyncHandler(async (req: any, res: Response) => {
   };
 
   if (!userId || !bookIds) {
-    return res.redirect(env.CLIENT_FAIL_URL);
+    return res.redirect("http://localhost:5173/payment-failed");
   }
 
   const ids = bookIds.split(",");
@@ -160,7 +160,7 @@ export const paymentSuccess = asyncHandler(async (req: any, res: Response) => {
 /* ===================== FAIL ===================== */
 
 export const paymentFail = asyncHandler(async (_req: any, res: Response) => {
-  return res.redirect(env.CLIENT_FAIL_URL);
+  return res.redirect("http://localhost:5173/payment-failed");
 });
 
 /* ===================== CANCEL ===================== */
