@@ -33,6 +33,7 @@ import NewBook from "../Pages/Dashboard/Author/NewBook";
 import MyBlogs from "../Pages/Dashboard/Author/MyBlog";
 import SingleAuthor from "../Pages/AllBook/Component/SingleAuthor";
 import UserMyLibrary from "../Pages/Dashboard/User/UserMyLibrary";
+import UserProfileUpdate from "../Pages/Dashboard/User/UserProfileUpdate";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +82,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <UserMyLibrary />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "dashboard/user/profile",
+        element: (
+          <ProtectedRoute>
+            <UserProfileUpdate />
           </ProtectedRoute>
         ),
       },
@@ -134,10 +143,26 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/dashboard/admin/profile",
+        element: (
+          <ProtectedRoute>
+            <UserProfileUpdate />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "dashboard/author/library",
         element: (
           <ProtectedRoute>
             <MyLibrary />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/dashboard/author/profile",
+        element: (
+          <ProtectedRoute>
+            <UserProfileUpdate />
           </ProtectedRoute>
         ),
       },

@@ -1,9 +1,12 @@
 import bcrypt from "bcrypt";
 import ApiError from "../../utils/ApiError";
-import { IUser } from "./user.interface";
 import { User } from "./user.model";
+import { HydratedDocument } from "mongoose";
+import { IUser } from "./user.interface";
 
-// create user
+// =======================
+// CREATE USER
+// =======================
 const createUser = async (payload: IUser) => {
   const exists = await User.findOne({ email: payload.email });
   if (exists) {
@@ -20,12 +23,16 @@ const createUser = async (payload: IUser) => {
   return user;
 };
 
-// get all users (admin)
+// =======================
+// GET ALL USERS (ADMIN)
+// =======================
 const getAllUsers = async () => {
   return User.find().select("-password");
 };
 
-// get single user
+// =======================
+// GET SINGLE USER
+// =======================
 const getUserById = async (id: string) => {
   const user = await User.findById(id).select("-password");
   if (!user) {
@@ -34,7 +41,9 @@ const getUserById = async (id: string) => {
   return user;
 };
 
-// update role (admin approve author)
+// =======================
+// UPDATE USER ROLE (ADMIN)
+// =======================
 const updateUserRole = async (id: string, role: string) => {
   const user = await User.findByIdAndUpdate(
     id,
@@ -49,9 +58,12 @@ const updateUserRole = async (id: string, role: string) => {
   return user;
 };
 
-// 🔥 activate / deactivate user (admin)
+// =======================
+// ACTIVATE / DEACTIVATE USER (ADMIN)
+// =======================
 const toggleUserStatus = async (id: string) => {
   const user = await User.findById(id);
+
   if (!user) {
     throw new ApiError(404, "User not found");
   }
@@ -62,11 +74,49 @@ const toggleUserStatus = async (id: string) => {
   return user;
 };
 
+// =======================
+// UPDATE LOGGED-IN USER PROFILE
+// (ONLY name & password)
+// =======================
+const updateMyProfile = async (
+  userId: string,
+  payload: { name?: string; password?: string }
+) => {
+  const user = await User.findById(userId);
 
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const typedUser = user as HydratedDocument<IUser>;
+
+  if (payload.name) {
+    typedUser.name = payload.name;
+  }
+
+  if (payload.password) {
+    typedUser.password = await bcrypt.hash(payload.password, 10);
+  }
+
+  await typedUser.save();
+
+  return typedUser.toObject({
+    versionKey: false,
+    transform: (_, ret: any) => {
+      delete ret.password;
+      return ret;
+    },
+  });
+};
+
+// =======================
+// EXPORT SERVICE
+// =======================
 export const UserService = {
   createUser,
   getAllUsers,
   getUserById,
   updateUserRole,
-  toggleUserStatus
+  toggleUserStatus,
+  updateMyProfile,
 };

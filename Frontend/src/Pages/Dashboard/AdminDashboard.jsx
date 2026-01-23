@@ -27,14 +27,22 @@ const AdminDashboard = () => {
       desc: "Approve or delete books",
       path: "/dashboard/admin/books",
     },
+    {
+      title: "👤 Update Profile",
+      desc: "Change your name or password",
+      path: "/dashboard/admin/profile",
+    },
   ];
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
 
       {/* ===== ADMIN HEADER ===== */}
-      <div className="relative mb-10 rounded-2xl p-6 bg-linear-to-r from-[#1e293b] to-[#334155] text-white shadow-lg overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+      <div className="relative mb-10 rounded-2xl p-6 
+                      bg-linear-to-r from-[#1e293b] to-[#334155] 
+                      text-white shadow-lg overflow-hidden">
+        <div className="absolute -top-10 -right-10 w-40 h-40 
+                        bg-white/10 rounded-full blur-2xl"></div>
 
         <h1 className="text-3xl font-extrabold">
           Admin Dashboard
@@ -87,11 +95,13 @@ const AdminCard = ({ title, desc, onClick }) => (
     <h2 className="text-xl font-bold mb-3 group-hover:text-blue-600 transition">
       {title}
     </h2>
+
     <p className="text-gray-600">
       {desc}
     </p>
 
-    <div className="mt-6 text-blue-500 font-semibold group-hover:translate-x-1 transition">
+    <div className="mt-6 text-blue-500 font-semibold 
+                    group-hover:translate-x-1 transition">
       Open →
     </div>
   </div>

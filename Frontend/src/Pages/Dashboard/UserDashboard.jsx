@@ -57,7 +57,7 @@ const UserDashboard = () => {
       </div>
 
       {/* ===== DASHBOARD CARDS ===== */}
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-3 gap-8">
 
         {/* 📚 My Library */}
         <DashboardCard>
@@ -86,6 +86,21 @@ const UserDashboard = () => {
           </p>
           <ActionButton onClick={applyAuthor}>
             Apply Now →
+          </ActionButton>
+        </DashboardCard>
+        {/* 👤 Update Profile */}
+        <DashboardCard>
+          <div className="text-4xl mb-4">👤</div>
+          <h2 className="text-xl font-bold mb-2">
+            Update Profile
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Update your personal information, password, and profile details.
+          </p>
+          <ActionButton
+            onClick={() => navigate("/dashboard/user/profile")}
+          >
+            Update Profile →
           </ActionButton>
         </DashboardCard>
 

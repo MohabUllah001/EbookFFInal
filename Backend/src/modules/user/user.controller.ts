@@ -74,3 +74,21 @@ export const getMyLibrary = asyncHandler(
     });
   }
 );
+
+// 🔐 Logged in user → update own profile (name & password)
+export const updateMyProfile = asyncHandler(
+  async (req: any, res: Response) => {
+    const userId = req.user.userId;
+    const { name, password } = req.body;
+
+    const user = await UserService.updateMyProfile(
+      userId,
+      { name, password }
+    );
+
+    res.json({
+      success: true,
+      data: user,
+    });
+  }
+);

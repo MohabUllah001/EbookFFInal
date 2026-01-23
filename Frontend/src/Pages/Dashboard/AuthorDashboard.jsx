@@ -63,6 +63,15 @@ const AuthorDashboard = () => {
           onClick={() => navigate("/dashboard/author/blogs")}
         />
 
+        {/* 👤 UPDATE PROFILE */}
+        <AuthorCard
+          icon="👤"
+          title="Update Profile"
+          desc="Change your name or password"
+          action="Update Profile →"
+          onClick={() => navigate("/dashboard/author/profile")}
+        />
+
       </div>
     </div>
   );

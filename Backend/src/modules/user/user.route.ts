@@ -4,7 +4,8 @@ import {
   getUserById,
   updateUserRole,
   toggleUserStatus,
-  getMyLibrary
+  getMyLibrary,
+  updateMyProfile
 } from "./user.controller";
 import auth from "../../middlewares/auth";
 import { roleGuard } from "../../middlewares/roleGuard";
@@ -48,5 +49,11 @@ router.get(
   getMyLibrary
 );
 
+// 🔐 Logged in user → update own profile
+router.put(
+  "/profile",
+  auth,
+  updateMyProfile
+);
 
 export default router;
